@@ -1,19 +1,16 @@
-// Imports
+import mongoose from "mongoose"
 import express from "express"
+import config from "./tsconfig.json"
+import userRouter from "./routes/user"
 
-// Déclarations
-const app = express()
-const port = 3000
+const server = express()
+const port = 8000
 
-// Middlewares
-app.use(express.json())
+mongoose.connect(config.mongoURL)
+    .then(() => console.log("Connecté à la base de données"))
+    .catch((err) => console.log(err))
 
-// Routes
-app.get("/", (req, res) => {
-    res.send("Hello world !")
-})
+server.use(express.json())
+server.use("/", userRouter)
 
-// Lancement du serveur
-app.listen(port, () => {
-    console.log(`[SERVEUR] Serveur lancé sur le port ${port}`)
-})
+server.listen(port, () => console.log(`Serveur lancé sur le port ${port}`))
