@@ -1,15 +1,29 @@
+// Imports
 import jwt from "jsonwebtoken"
 import Cookies from "cookies"
-import config from "../tsconfig.json"
+import "dotenv/config"
+import { Request, Response, NextFunction } from "express"
 
-export function auth(req, res, next) {
-    const token = new Cookies(req, res).get("accessToken")
-    jwt.verify(token, config.secretKey, (err, decoded) => {
-        if (err) {
-            res.status(401).send("Veuillez vous connecter")
-        } else {
-            req.body.authUser = decoded
-            next()
-        }
-    })
+// Déclarations
+const secretKey = process.env.JWT_SECRET_KEY || "secretKey"
+const cookieName = process.env.JWT_COOKIE_NAME || "authToken"
+
+// Récupère, décode et passe dans la requête le token de l'utilisateur
+function auth(req: Request, res: Response, next: NextFunction) {
+    const token = new Cookies(req, res).get(cookieName)
+    if (token) {
+        jwt.verify(token, secretKey, (err, decoded) => {
+            if (err) {
+                res.sendStatus(401)
+            } else {
+                req.body._authUser = decoded
+                next()
+            }
+        })
+    } else {
+        res.sendStatus(401)
+    }
 }
+
+// Exports
+export { auth }

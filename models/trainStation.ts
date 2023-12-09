@@ -1,5 +1,7 @@
+// Imports
 import { Schema, model } from "mongoose"
 
+// Déclarations
 const schema = new Schema({
     name: {
         type: Schema.Types.String,
@@ -20,4 +22,5 @@ const schema = new Schema({
     }
 })
 
+// Exports
 export const TrainStation = model("TrainStation", schema)

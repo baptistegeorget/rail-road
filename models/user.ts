@@ -1,5 +1,7 @@
+// Imports
 import { Schema, model } from "mongoose"
 
+// Déclarations
 const schema = new Schema({
     email: {
         type: Schema.Types.String,
@@ -26,4 +28,5 @@ const schema = new Schema({
     }
 })
 
+// Exports
 export const User = model("User", schema)

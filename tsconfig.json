@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "esModuleInterop": true,
-        "resolveJsonModule": true
-    },
-    "mongoURL": "mongodb://localhost:27017/database",
-    "secretKey": "01234-01234-01234-01234"
-}
