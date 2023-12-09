@@ -38,8 +38,8 @@ mongoose.connect(`mongodb://${mongodbHost}:${mongodbPort}/${mongodbDatabase}`)
 
 // Configuration du serveur
 server.use(express.json())
-server.use("/users", userRouter)
-server.use("/trainstations", trainStationRouter)
+server.use("/user", userRouter)
+server.use("/trainstation", trainStationRouter)
 
 // Lancement du serveur
 server.listen(serverPort, () => console.log(`[RAIL-ROAD]:    Serveur lancé sur le port ${serverPort}`))

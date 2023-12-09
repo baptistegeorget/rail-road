@@ -9,11 +9,11 @@ const schema = new Schema({
         unique: true,
         maxLength: 50
     },
-    open_hour: {
+    openHour: {
         type: Schema.Types.String,
         required: true
     },
-    close_hour: {
+    closeHour: {
         type: Schema.Types.String,
         required: true
     },

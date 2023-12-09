@@ -9,17 +9,17 @@ const schema = new Schema({
         unique: true,
         maxLength: 50
     },
-    start_station: {
+    startStation: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "TrainStation"
     },
-    end_station: {
+    endStation: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "TrainStation"
     },
-    time_of_departure: {
+    timeOfDeparture: {
         type: Schema.Types.String,
         required: true,
     }

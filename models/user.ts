@@ -1,32 +1,18 @@
-// Imports
 import { Schema, model } from "mongoose"
+import Joi from "joi"
 
-// Déclarations
-const schema = new Schema({
-    email: {
-        type: Schema.Types.String,
-        required: true,
-        unique: true,
-        maxLength: 50
-    },
-    pseudo: {
-        type: Schema.Types.String,
-        required: true,
-        unique: true,
-        maxLength: 50
-    },
-    password: {
-        type: Schema.Types.String,
-        required: true,
-        maxLength: 256
-    },
-    role: {
-        type: Schema.Types.String,
-        required: true,
-        enum: ['User', 'Employee', 'Admin'],
-        default: 'User'
-    }
-})
+const User = model("User", new Schema({
+    email: Schema.Types.String,
+    pseudo: Schema.Types.String,
+    password: Schema.Types.String,
+    role: Schema.Types.String
+}))
 
-// Exports
-export const User = model("User", schema)
+const userValidationSchema = Joi.object({
+    email: Joi.string().email().max(50).required(),
+    pseudo: Joi.string().max(50).required(),
+    password: Joi.string().required(),
+    role: Joi.string().valid("Admin", "Employee", "User").required()
+});
+
+export { User, userValidationSchema }
