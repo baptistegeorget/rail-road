@@ -5,9 +5,9 @@
 ### Gestion des utilisateurs
 
 - [ ] Créer, Lire, Mettre à jour, Supprimer l'utilisateur
-- [ ] L'utilisateur -> {id, email, pseudo, mot de passe, role}
+- [x] L'utilisateur -> {id, email, pseudo, mot de passe, role}
 - [ ] Les utilisateurs normaux ne peuvent pas lire les informations sur un autre utilisateur, mais un employé peut vérifier les informations
-- [ ] Vous pouvez créer un nouvel utilisateur même sans être connecté
+- [x] Vous pouvez créer un nouvel utilisateur même sans être connecté
 - [ ] Vous pouvez seulement vous mettre à jour (les autres utilisateurs ne peuvent pas vous mettre à jour SAUF si admin)
 - [ ] Vous ne pouvez vous supprimer que vous-même (les autres utilisateurs ne peuvent pas vous supprimer)
 
