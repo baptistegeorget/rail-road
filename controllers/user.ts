@@ -53,7 +53,7 @@ async function read(req: Request, res: Response) {
                 res.status(404).send("L'utilisateur n'existe pas")
             }
         } else {
-            res.status(401).send("Vous n'avez pas les droits nécessaires pour accéder à ces données")
+            res.status(401).send("Vous n'avez pas les droits nécessaires")
         }
     }
 }
@@ -86,7 +86,7 @@ async function update(req: Request, res: Response) {
             }
         }
     } else {
-        res.status(401).send("Vous n'avez pas les droits nécessaires pour modifier ces données")
+        res.status(401).send("Vous n'avez pas les droits nécessaires")
     }
 }
 
@@ -102,7 +102,7 @@ async function remove(req: Request, res: Response) {
             res.status(404).send("L'utilisateur n'existe pas")
         }
     } else {
-        res.status(401).send("Vous n'avez pas les droits nécessaires pour supprimer ces données")
+        res.status(401).send("Vous n'avez pas les droits nécessaires")
     }
 }
 

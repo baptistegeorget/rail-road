@@ -1,4 +1,3 @@
-// Imports
 import mongoose from "mongoose"
 import express from "express"
 import userRouter from "./routes/user"
@@ -7,8 +6,8 @@ import { User } from "./models/user"
 import crypto from "crypto"
 import "dotenv/config"
 
-// Déclarations
 const server = express()
+export const workingDirectory = __dirname
 const serverPort = process.env.SERVER_PORT || "8000"
 const mongodbHost = process.env.MONGODB_HOST || "localhost"
 const mongodbPort = process.env.MONGODB_PORT || "27017"
@@ -36,10 +35,9 @@ mongoose.connect(`mongodb://${mongodbHost}:${mongodbPort}/${mongodbDatabase}`)
     })
     .catch((err) => console.log(err))
 
-// Configuration du serveur
+server.use(express.static("public"))
 server.use(express.json())
 server.use("/user", userRouter)
 server.use("/trainstation", trainStationRouter)
 
-// Lancement du serveur
 server.listen(serverPort, () => console.log(`[RAIL-ROAD]:    Serveur lancé sur le port ${serverPort}`))
