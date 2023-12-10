@@ -18,13 +18,12 @@ async function create(req: Request, res: Response) {
             if (trainStationFind) {
                 res.status(401).send("Une gare avec le même nom existe déjà")
             } else {
-                let uploadPath = file ? path.join(workingDirectory, "public", "uploads", file.originalname) : null
+                let uploadPath = file ? path.join(workingDirectory, "public", "uploads", name + "." + file.originalname) : null
                 if (uploadPath && file) {
-                    console.log(uploadPath)
                     const resizedBuffer = await sharp(file.buffer).resize({ width: 200, height: 200, fit: 'inside' }).toBuffer()
                     await sharp(resizedBuffer).toFile(uploadPath)
                 }
-                const trainStationNew = new TrainStation({ name, openHour, closeHour, image: uploadPath })
+                const trainStationNew = new TrainStation({ name, openHour, closeHour, image: file ? `${req.protocol}://${req.get('host')}/uploads/${name + "." + file.originalname}` : null })
                 await trainStationNew.save()
                     .then(() => {
                         res.status(201).send("Gare créée")
@@ -42,4 +41,8 @@ async function create(req: Request, res: Response) {
     }
 }
 
-export { create }
+async function read(req: Request, res: Response) {
+    const {  } = req.body
+}
+
+export { create, read }
