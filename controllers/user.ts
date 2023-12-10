@@ -8,96 +8,101 @@ import jwt from "jsonwebtoken"
 const secretKey = process.env.JWT_SECRET_KEY || "secret"
 const cookieName = process.env.JWT_COOKIE_NAME || "token"
 
-// Cherche l'utilisateur, si il est trouvé alors un token est créé, sinon l'utilisateur et un token sont créés.
+// Cherche l'utilisateur. Si il est trouvé et que le mot de passe est bon alors un token est créé. Si l'utilisateur n'existe pas alors lui et un token sont créés.
 async function create(req: Request, res: Response) {
     const { email, pseudo, password } = req.body
     const userFind = await User.findOne({ email })
     if (userFind) {
-        const token = jwt.sign({ id: userFind._id }, secretKey, { expiresIn: "7d" })
-        new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
-        res.sendStatus(201)
+        if (crypto.createHash("sha256").update(password).digest("hex") === userFind.password) {
+            const token = jwt.sign(userFind.toJSON(), secretKey, { expiresIn: "7d" })
+            new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
+            res.status(201).send("Connexion réussie")
+        } else {
+            res.status(401).send("Mot de passe incorrect")
+        }
     } else {
-        let error = userValidationSchema.validate({ email, pseudo, password, role: "User" }).error
+        const error = userValidationSchema.validate({ email, pseudo, password, role: "User" }).error
         if (error) {
             res.status(401).send(error)
         } else {
             const userNew = new User({ email, pseudo, password: crypto.createHash("sha256").update(password).digest("hex"), role: "User" })
             await userNew.save()
                 .then(() => {
-                    const token = jwt.sign({ id: userNew._id }, secretKey, { expiresIn: "7d" })
+                    const token = jwt.sign(userNew.toJSON(), secretKey, { expiresIn: "7d" })
                     new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
-                    res.sendStatus(201)
+                    res.status(201).send("Utilisateur créé")
                 })
                 .catch((err) => {
-                    console.log(err)
                     res.status(500).send(err)
                 })
         }
     }
 }
 
+// Envoi ses données à l'utilisateur. Si c'est un Admin ou un Employee, cherche l'utilisateur. Si il est trouvé, alors les données de l'utilisateur sont envoyées.
 async function read(req: Request, res: Response) {
-    const payload = {
-        email: req.body.email
-    }
-    const authUser = req.body._authUser
-    if (authUser.role === ("Admin" || "Employee") || payload.email === authUser.email) {
-        const user = await User.findOne({ email: payload.email })
-        if (!user) {
-            res.sendStatus(404)
-        } else {
-            res.status(200).send({ email: user.email, pseudo: user.pseudo, role: user.role })
-        }
+    const { email, user } = req.body
+    if (email === user.email) {
+        res.status(200).send(user)
     } else {
-        res.sendStatus(401)
-    }
-}
-
-async function update(req: Request, res: Response) {
-    const payload = {
-        email: req.body.email,
-        newEmail: req.body.newEmail,
-        pseudo: req.body.pseudo,
-        password: crypto.createHash("sha256").update(req.body.password).digest("hex"),
-        role: req.body.role
-    }
-    const authUser = req.body._authUser
-    if (authUser.role === "Admin" || authUser.email === payload.email) {
-        const user = await User.findOneAndUpdate({ email: payload.email }, {
-            email: payload.newEmail,
-            pseudo: payload.pseudo,
-            password: payload.password,
-            ...(authUser.role === "Admin" ? { role: payload.role } : {})
-        }, { new: true })
-        if (user) {
-            if (authUser.email === payload.email) {
-                const token = jwt.sign({ email: user.email, pseudo: user.pseudo, role: user.role }, secretKey, { expiresIn: "1h" })
-                new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
+        if (user.role === ("Admin" || "Employee")) {
+            const userFind = await User.findOne({ email })
+            if (userFind) {
+                res.status(200).send(userFind)
+            } else {
+                res.status(404).send("L'utilisateur n'existe pas")
             }
-            res.sendStatus(201)
         } else {
-            res.sendStatus(404)
+            res.status(401).send("Vous n'avez pas les droits nécessaires pour accéder à ces données")
         }
-    } else {
-        res.sendStatus(401)
     }
 }
 
-async function remove(req: Request, res: Response) {
-    const payload = {
-        email: req.body.email
-    }
-    const authUser = req.body._authUser
-    if (payload.email === authUser.email) {
-        const user = await User.findOneAndDelete({ email: payload.email })
-        if (user) {
-            new Cookies(req, res).set(cookieName, null)
-            res.sendStatus(200)
+// Modifie l'utilisateur et lui recréer un token. Si c'est un Admin, cherche l'utilisateur. Si il est trouvé, alors ses données sont modifiées. Seul l'Admin peut modifier le role.
+async function update(req: Request, res: Response) {
+    const { email, pseudo, password, role, newEmail, user } = req.body
+    if (user.role === "Admin" || user.email === email) {
+        const error = userValidationSchema.validate({ email: newEmail, pseudo, password, ...(user.role === "Admin" ? { role } : { role: user.role }) }).error
+        if (error) {
+            res.status(401).send(error)
         } else {
-            res.sendStatus(404)
+            let userExist = null
+            if (email !== newEmail) {
+                userExist = await User.findOne({ email: newEmail })
+            }
+            if (userExist) {
+                res.status(401).send("Le nouvel email est déjà utilisé")
+            } else {
+                const userUpdate = await User.findOneAndUpdate({ email }, { email: newEmail, pseudo: pseudo, password: crypto.createHash("sha256").update(password).digest("hex"), ...(user.role === "Admin" ? { role } : { role: user.role }) }, { new: true })
+                if (userUpdate) {
+                    if (user.email === email) {
+                        const token = jwt.sign(userUpdate.toJSON(), secretKey, { expiresIn: "7d" })
+                        new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
+                    }
+                    res.status(200).send("Utilisateur modifié")
+                } else {
+                    res.status(404).send("L'utilisateur n'existe pas")
+                }
+            }
         }
     } else {
-        res.sendStatus(401)
+        res.status(401).send("Vous n'avez pas les droits nécessaires pour modifier ces données")
+    }
+}
+
+// Supprime l'utilisateur et son token.
+async function remove(req: Request, res: Response) {
+    const { email, user } = req.body
+    if (email === user.email) {
+        const userFind = await User.findOneAndDelete({ email })
+        if (userFind) {
+            new Cookies(req, res).set(cookieName, null)
+            res.status(200).send("Utilisateur supprimé")
+        } else {
+            res.status(404).send("L'utilisateur n'existe pas")
+        }
+    } else {
+        res.status(401).send("Vous n'avez pas les droits nécessaires pour supprimer ces données")
     }
 }
 

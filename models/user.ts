@@ -10,8 +10,8 @@ const User = model("User", new Schema({
 
 const userValidationSchema = Joi.object({
     email: Joi.string().email().max(50).required(),
-    pseudo: Joi.string().max(50).required(),
-    password: Joi.string().required(),
+    pseudo: Joi.string().min(1).max(50).required(),
+    password: Joi.string().min(8).max(50).required(),
     role: Joi.string().valid("Admin", "Employee", "User").required()
 });
 

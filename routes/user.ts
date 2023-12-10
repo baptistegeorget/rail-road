@@ -5,8 +5,8 @@ import { create, read, update, remove } from "../controllers/user"
 const router = express.Router()
 
 router.post("/", create) // Validé
-router.get("/", authentication, read)
-router.patch("/", authentication, update)
-router.delete("/", authentication, remove)
+router.get("/", authentication, read) // Validé
+router.patch("/", authentication, update) // Validé
+router.delete("/", authentication, remove) // Validé
 
 export default router;
