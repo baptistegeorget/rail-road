@@ -1,29 +1,18 @@
-// Imports
 import { Schema, model } from "mongoose"
+import Joi from "joi"
 
-// Déclarations
-const schema = new Schema({
-    name: {
-        type: Schema.Types.String,
-        required: true,
-        unique: true,
-        maxLength: 50
-    },
-    startStation: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "TrainStation"
-    },
-    endStation: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "TrainStation"
-    },
-    timeOfDeparture: {
-        type: Schema.Types.String,
-        required: true,
-    }
+const Train = model("Train", new Schema({
+    name: Schema.Types.String,
+    startStation: Schema.Types.ObjectId,
+    endStation: Schema.Types.ObjectId,
+    timeOfDeparture: Schema.Types.String
+}))
+
+const trainValidationSchema = Joi.object({
+    name: Joi.string().min(1).max(50).required(),
+    startStation: Joi.string(),
+    endStation: Joi.string(),
+    timeOfDeparture: Joi.string().pattern(new RegExp("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")).required()
 })
 
-// Exports
-export const Train = model("Train", schema)
+export { Train, trainValidationSchema }

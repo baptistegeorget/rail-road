@@ -14,20 +14,20 @@
 ### Authentification
 
 - [x] Différentes solutions peuvent être utilisées, le jeton jwt est recommandé (voir conseils pour plus d'informations)
-- [ ] Tous les points de terminaison lus des données de train ne sont pas journalisés/anonymes 
-- [ ] Tous les points de terminaison Write nécessitent que la requête soit authentifiée (stadeless)
+- [x] Tous les points de terminaison lus des données de train ne sont pas journalisés/anonymes 
+- [x] Tous les points de terminaison Write nécessitent que la requête soit authentifiée (stadeless)
 
 ### Gestion des trains
 
-- [ ] Énumérez tous les trains et permettez de trier par date, station de départ, station de fin avec une limite (limite par défaut est 10 mais peut être changé avec un paramètre)
-- [ ] Créer, Lire, Mettre à jour, Supprimer des trains
-- [ ] Train -> {id, name, start_station, end_station, time_of_departure}
-- [ ] Seul un administrateur peut créer, mettre à jour et supprimer un train
+- [x] Énumérez tous les trains et permettez de trier par date, station de départ, station de fin avec une limite (limite par défaut est 10 mais peut être changé avec un paramètre)
+- [x] Créer, Lire, Mettre à jour, Supprimer des trains
+- [x] Train -> {id, name, start_station, end_station, time_of_departure}
+- [x] Seul un administrateur peut créer, mettre à jour et supprimer un train
 
 ### Gestion des gares
 
 - [x] Énumérez toutes les gares et permettez de trier par nom
-- [ ] Créer, Lire, Mettre à jour, Supprimer la gare
+- [x] Créer, Lire, Mettre à jour, Supprimer la gare
 - [ ] Seul un administrateur peut créer, mettre à jour ou supprimer une gare (attention lorsque vous supprimez une gare, vous devez penser aux trains!)
 - [x] Gare -> {id, name, open_hour, close_hour, image}. L'image doit être redimensionnée à une image 200*200px si le téléchargement est trop grand
 
@@ -35,5 +35,5 @@
 
 - [ ] Pouvoir réserver un ticket et le valider
 - [ ] Il est important de fournir de bons commentaires aux utilisateurs utilisant l'API afin que vous ayez besoin de mettre en œuvre une solution/validation de type simple comme Joi ou Yup ou AJV
-- [ ] Sur la même note, vous devez utiliser le code HTTP valide lors du retour d'informations à l'utilisateur
+- [x] Sur la même note, vous devez utiliser le code HTTP valide lors du retour d'informations à l'utilisateur
 - [ ] Les tests sont importants. Vous devez mettre en œuvre quelques tests sur votre projet. Concentrez-vous sur le test des fonctionnalités de base

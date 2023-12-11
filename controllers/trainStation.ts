@@ -46,14 +46,14 @@ async function read(req: Request, res: Response) {
         sortConfig[sortBy] = order
     }
     const trainStations = await TrainStation.find().sort(sortConfig)
-    if (trainStations) {
+    if (trainStations.length > 0) {
         res.status(200).send(trainStations)
     } else {
         res.status(404).send("Aucune gare trouvée")
     }
 }
 
-// Si l'utilisateur est un Admin modifie la gare.
+// Si l'utilisateur est un Admin, modifie la gare.
 async function update(req: Request, res: Response) {
     const { name, openHour, closeHour, newName, user } = req.body
     if (user.role === "Admin") {
@@ -89,8 +89,8 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
     const { name, user } = req.body
     if (user.role === "Admin") {
-        const userFind = await TrainStation.findOneAndDelete({ name })
-        if (userFind) {
+        const trainStationFind = await TrainStation.findOneAndDelete({ name })
+        if (trainStationFind) {
             res.status(200).send("Gare supprimée")
         } else {
             res.status(404).send("La gare n'existe pas")
