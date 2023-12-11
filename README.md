@@ -13,7 +13,7 @@
 
 ### Authentification
 
-- [ ] Différentes solutions peuvent être utilisées, le jeton jwt est recommandé (voir conseils pour plus d'informations)
+- [x] Différentes solutions peuvent être utilisées, le jeton jwt est recommandé (voir conseils pour plus d'informations)
 - [ ] Tous les points de terminaison lus des données de train ne sont pas journalisés/anonymes 
 - [ ] Tous les points de terminaison Write nécessitent que la requête soit authentifiée (stadeless)
 
@@ -26,7 +26,7 @@
 
 ### Gestion des gares
 
-- [ ] Énumérez toutes les gares et permettez de trier par nom
+- [x] Énumérez toutes les gares et permettez de trier par nom
 - [ ] Créer, Lire, Mettre à jour, Supprimer la gare
 - [ ] Seul un administrateur peut créer, mettre à jour ou supprimer une gare (attention lorsque vous supprimez une gare, vous devez penser aux trains!)
 - [x] Gare -> {id, name, open_hour, close_hour, image}. L'image doit être redimensionnée à une image 200*200px si le téléchargement est trop grand
