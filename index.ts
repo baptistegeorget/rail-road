@@ -3,6 +3,7 @@ import express from "express"
 import userRouter from "./routes/user"
 import trainStationRouter from "./routes/trainStation"
 import trainRouter from "./routes/train"
+import ticketRouter from "./routes/ticket"
 import { User } from "./models/user"
 import crypto from "crypto"
 import "dotenv/config"
@@ -41,5 +42,6 @@ server.use(express.json())
 server.use("/user", userRouter)
 server.use("/trainstation", trainStationRouter)
 server.use("/train", trainRouter)
+server.use("/ticket", ticketRouter)
 
 server.listen(serverPort, () => console.log(`[RAIL-ROAD]:    Serveur lancé sur le port ${serverPort}`))

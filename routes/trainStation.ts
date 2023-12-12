@@ -8,6 +8,6 @@ const router = express.Router()
 router.post("/", multer({ storage: multer.memoryStorage() }).single("image"), authentication, create) // Validé
 router.get("/", read) // Validé
 router.patch("/", multer({ storage: multer.memoryStorage() }).single("image"), authentication, update) // Validé
-router.delete("/", authentication, remove)
+router.delete("/", authentication, remove) // Validé
 
 export default router;
