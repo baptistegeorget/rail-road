@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { TrainStation, trainStationValidationSchema } from "../models/trainStation"
+import { Train } from "../models/train"
 import path from "path"
 import sharp from "sharp"
 import fs from "fs"
@@ -89,8 +90,13 @@ async function update(req: Request, res: Response) {
 async function remove(req: Request, res: Response) {
     const { name, user } = req.body
     if (user.role === "Admin") {
-        const trainStationFind = await TrainStation.findOneAndDelete({ name })
+        const trainStationFind = await TrainStation.findOne({ name })
         if (trainStationFind) {
+            await TrainStation.deleteOne({ name: trainStationFind.name })
+            await Train.deleteMany({ $or: [{ startStation: trainStationFind._id }, { endStation: trainStationFind._id }], })
+            if (trainStationFind.image) {
+                removeImage(trainStationFind.image.split("/")[trainStationFind.image.split("/").length - 1])
+            }
             res.status(200).send("Gare supprimée")
         } else {
             res.status(404).send("La gare n'existe pas")
