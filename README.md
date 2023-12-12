@@ -33,7 +33,7 @@
 
 ### Autres
 
-- [ ] Pouvoir réserver un ticket et le valider
+- [x] Pouvoir réserver un ticket et le valider
 - [ ] Il est important de fournir de bons commentaires aux utilisateurs utilisant l'API afin que vous ayez besoin de mettre en œuvre une solution/validation de type simple comme Joi ou Yup ou AJV
 - [x] Sur la même note, vous devez utiliser le code HTTP valide lors du retour d'informations à l'utilisateur
 - [ ] Les tests sont importants. Vous devez mettre en œuvre quelques tests sur votre projet. Concentrez-vous sur le test des fonctionnalités de base

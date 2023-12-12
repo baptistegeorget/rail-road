@@ -16,7 +16,7 @@ async function create(req: Request, res: Response) {
         if (crypto.createHash("sha256").update(password).digest("hex") === userFind.password) {
             const token = jwt.sign(userFind.toJSON(), secretKey, { expiresIn: "7d" })
             new Cookies(req, res).set(cookieName, token, { httpOnly: true, secure: false })
-            res.status(201).send("Connexion réussie")
+            res.status(200).send("Connexion réussie")
         } else {
             res.status(401).send("Mot de passe incorrect")
         }

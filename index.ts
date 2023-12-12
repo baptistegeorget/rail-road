@@ -8,7 +8,7 @@ import { User } from "./models/user"
 import crypto from "crypto"
 import "dotenv/config"
 
-const server = express()
+export const server = express()
 export const workingDirectory = __dirname
 const serverPort = process.env.SERVER_PORT || "8000"
 const mongodbHost = process.env.MONGODB_HOST || "localhost"
